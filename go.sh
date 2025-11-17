@@ -2,7 +2,7 @@
 
 
 # macOS Installation and Elevated Security Removal Tool
-# v2.3-beta
+# v3.0-beta
 # https://github.com/nkerschner/macOSDrives
 
 
@@ -217,7 +217,7 @@ select_os() {
     done
     read userOS
     
-    while ! [[ "$userOS" =~ ^[1-7]$ ]]; do
+    while ! [[ "$userOS" =~ ^[1-6]$ ]]; do
         echo "Invalid selection. Please enter a number from 1 to ${#os_names[@]}."
         read userOS
     done
@@ -240,7 +240,6 @@ alt_select_os() {
 
 # Prompt for installation method
 select_install_method() {
-    
     if [ "$userOS" -le 5 ] ; then
         echo
         echo "Choose installation method: 1. ASR 2. Manual install"
@@ -252,6 +251,7 @@ select_install_method() {
     else 
         userMethod=2
     fi
+	
 }
 
 # Run through a passed array of Mac devices to see if our device is included in that version array
@@ -310,35 +310,36 @@ get_install_os() {
 
 # Install macOS
 install_os() {
-    # Create associative arrays for file paths
+    declare -a os_names
+    os_names[1]="Tahoe"
+	os_names[2]="Sequoia"
+    os_names[3]="Sonoma"
+    os_names[4]="Ventura"
+    os_names[5]="Monterey"
+    os_names[6]="Big Sur"
+	
+	# Create associative arrays for file paths
     declare -a asr_images
-    asr_images[1]="sequoia.dmg"
-    asr_images[2]="sonoma.dmg"
-    asr_images[3]="ventura.dmg"
-    asr_images[4]="monterey.dmg"
-    asr_images[5]="bigsur.dmg"
+	asr_images[1]="tahoe.dmg"
+    asr_images[2]="sequoia.dmg"
+    asr_images[3]="sonoma.dmg"
+    asr_images[4]="ventura.dmg"
+    asr_images[5]="monterey.dmg"
+    asr_images[6]="bigsur.dmg"
     
     declare -a installers
-    installers[1]="Install macOS Sequoia.app"
-    installers[2]="Install macOS Sonoma.app"
-    installers[3]="Install macOS Ventura.app"
-    installers[4]="Install macOS Monterey.app"
-    installers[5]="Install macOS Big Sur.app"
-    installers[6]="Install macOS Catalina.app"
-    installers[7]="Install macOS High Sierra.app"
+    installers[1]="Install macOS Tahoe.app"
+	installers[2]="Install macOS Sequoia.app"
+    installers[3]="Install macOS Sonoma.app"
+    installers[4]="Install macOS Ventura.app"
+	installers[5]="Install macOS Monterey.app"
+    installers[6]="Install macOS Big Sur.app"
 
     
-    declare -a os_names
-    os_names[1]="Sequoia"
-    os_names[2]="Sonoma"
-    os_names[3]="Ventura"
-    os_names[4]="Monterey"
-    os_names[5]="Big Sur"
-    os_names[6]="Catalina"
-    os_names[7]="High Sierra"  
+    
 
     select_os
-    select_install_method
+    #select_install_method
 
     format_disk
 
@@ -350,14 +351,18 @@ install_os() {
     if [[ "$userOS" == 1 ]]; then
         check_internet
     fi
-    
-    if [[ "$userMethod" == 1 ]]; then
+
+	# Default to ASR if image exists, fallback to application otherwise
+    if [ -f  "$ASR_IMAGE_PATH${asr_images[$userOS]}"]; then
         echo "${os_names[$userOS]} ASR install"
         run_asr_restore "$ASR_IMAGE_PATH${asr_images[$userOS]}"
-    elif [[ "$userMethod" == 2 ]]; then
-        echo "selected ${os_names[$userOS]} manual install"
+    elif [ -f "${installers[$userOS]}" ]; then
+        echo "${os_names[$userOS]} application install"
         run_manual_install "${installers[$userOS]}"
-    fi
+    else
+		echo "Could not find ASR image or installer application for the selected OS. Please check your drive"
+		echo
+	fi
 }
 
 # Alternative installer for old usb partition scheme
@@ -386,17 +391,17 @@ alt_install_os() {
 
 
     alt_select_os
-    select_install_method
+    #select_install_method
 
     format_disk
 
     
     echo "==== starting OS installation ===="    
     
-    if [[ "$userMethod" == 1 ]]; then
+    if [ -f "${alt_asr_images[$userOS]}" ]; then
         echo "${alt_os_names[$userOS]} ASR install"
         run_asr_restore "${alt_asr_images[$userOS]}"
-    elif [[ "$userMethod" == 2 ]]; then
+    elif [ -f "${alt_installers[$userOS]}" ]; then
         echo "selected ${alt_os_names[$userOS]} manual install"
         alt_run_manual_install "${alt_installers[$userOS]}"
     fi
