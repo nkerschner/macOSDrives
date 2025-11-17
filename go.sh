@@ -180,7 +180,8 @@ check_internet() {
 # Perform ASR restore
 run_asr_restore() {
     local source_image=$1
-    if asr restore -s "$source_image" -t "$INTERNAL_VOLUME_PATH" --erase --noverify --noprompt; then
+    "==== starting ASR restore of $source_image ===="
+	if asr restore -s "$source_image" -t "$INTERNAL_VOLUME_PATH" --erase --noverify --noprompt; then
         echo "ASR restore successful. restarting..."
         restart_system
     else
@@ -406,7 +407,7 @@ alt_install_os() {
     if [ -f "${alt_asr_images[$userOS]}" ]; then
         echo "${alt_os_names[$userOS]} ASR install"
         run_asr_restore "${alt_asr_images[$userOS]}"
-    elif [ -f "${alt_installers[$userOS]}" ]; then
+    elif [ -d "${alt_installers[$userOS]}" ]; then
         echo "selected ${alt_os_names[$userOS]} application install"
         alt_run_application_install "${alt_installers[$userOS]}"
     fi
@@ -449,7 +450,7 @@ main_menu() {
     until [ "$userQuit" = 1 ]; do
         echo 
         echo "===== macOS Installation and Recovery Tool ====="
-        echo "1. Elevated Security"
+        echo "1. Restore to Elevated Security Removal image"
         echo "2. Install OS"
         echo "3. Scan ASR image"
         echo "4. Restart System"
