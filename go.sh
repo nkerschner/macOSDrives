@@ -412,6 +412,7 @@ ASR_image_scan() {
 	echo "Please select the image you would like to scan: "
 	select_os
 
+	echo "Starting scan of $ASR_IMAGE_PATH${asr_images[$userOS]}"
     if asr imagescan -s "$ASR_IMAGE_PATH${asr_images[$userOS]}" &> /dev/null; then
         echo "ASR image scan successful."
     else
