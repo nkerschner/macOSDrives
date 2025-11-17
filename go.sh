@@ -2,7 +2,7 @@
 
 
 # macOS Installation and Elevated Security Removal Tool
-# v2.3-beta
+# v3.1
 # https://github.com/nkerschner/macOSDrives
 
 
@@ -16,6 +16,32 @@ ES_SOURCE_PATH="/Volumes/ASR/cat.dmg"
 ALT_ES_SOURCE_PATH="Volumes/e/cat.dmg"
 INTERNAL_VOLUME_NAME="Macintosh HD"
 INTERNAL_VOLUME_PATH="/Volumes/Macintosh HD"
+
+# declare array of OS names
+declare -a os_names
+    os_names[1]="Tahoe"
+	os_names[2]="Sequoia"
+    os_names[3]="Sonoma"
+    os_names[4]="Ventura"
+    os_names[5]="Monterey"
+    os_names[6]="Big Sur"
+	
+# Create associative arrays for file paths
+declare -a asr_images
+	asr_images[1]="tahoe.dmg"
+    asr_images[2]="sequoia.dmg"
+    asr_images[3]="sonoma.dmg"
+    asr_images[4]="ventura.dmg"
+    asr_images[5]="monterey.dmg"
+    asr_images[6]="bigsur.dmg"
+    
+declare -a installers
+    installers[1]="Install macOS Tahoe.app"
+	installers[2]="Install macOS Sequoia.app"
+    installers[3]="Install macOS Sonoma.app"
+    installers[4]="Install macOS Ventura.app"
+	installers[5]="Install macOS Monterey.app"
+    installers[6]="Install macOS Big Sur.app"
 
 # Declare arrays for each MacOS version and compatible devices
 declare -a Catalina=("MacBookAir5,1" "MacBookAir5,2" "MacBookAir6,1" "MacBookAir6,2" "MacBookAir7,1" \
@@ -154,7 +180,8 @@ check_internet() {
 # Perform ASR restore
 run_asr_restore() {
     local source_image=$1
-    if asr restore -s "$source_image" -t "$INTERNAL_VOLUME_PATH" --erase --noverify --noprompt; then
+    "==== starting ASR restore of $source_image ===="
+	if asr restore -s "$source_image" -t "$INTERNAL_VOLUME_PATH" --erase --noverify --noprompt; then
         echo "ASR restore successful. restarting..."
         restart_system
     else
@@ -163,21 +190,21 @@ run_asr_restore() {
 }
 
 # Perform install through application
-run_manual_install() {
+run_application_install() {
     local installer_path="$1"
 
     clear_smcnvram
 
-    echo "Starting manual install"
+    echo "Starting application install"
     "$INSTALLER_VOLUME_PATH$installer_path/Contents/Resources/startosinstall" --agreetolicense --volume "$INTERNAL_VOLUME_PATH"
 }
 
-alt_run_manual_install(){
+alt_run_application_install(){
     local alt_installer_path="$1"
 
     clear_smcnvram
 
-    echo "Starting manual install"
+    echo "Starting application install"
 	"$alt_installer_path/Contents/Resources/startosinstall" --agreetolicense --volume "$INTERNAL_VOLUME_PATH"
 }
 
@@ -217,7 +244,7 @@ select_os() {
     done
     read userOS
     
-    while ! [[ "$userOS" =~ ^[1-7]$ ]]; do
+    while ! [[ "$userOS" =~ ^[1-6]$ ]]; do
         echo "Invalid selection. Please enter a number from 1 to ${#os_names[@]}."
         read userOS
     done
@@ -240,18 +267,18 @@ alt_select_os() {
 
 # Prompt for installation method
 select_install_method() {
-    
     if [ "$userOS" -le 5 ] ; then
         echo
-        echo "Choose installation method: 1. ASR 2. Manual install"
+        echo "Choose installation method: 1. ASR 2. application install"
         read userMethod
         while ! [[ "$userMethod" =~ ^[1-2]$ ]]; do
-            echo "Invalid selection. Please enter 1 for ASR or 2 for Manual install."
+            echo "Invalid selection. Please enter 1 for ASR or 2 for application install."
             read userMethod
         done
     else 
         userMethod=2
     fi
+	
 }
 
 # Run through a passed array of Mac devices to see if our device is included in that version array
@@ -264,8 +291,8 @@ hasVersion() {
     [[ " $model_list " == *" $needle "* ]]
 }
 
-get_install_os() {
-    # Get device model name
+list_compatible_os() {
+	# Get device model name
     model=$(sysctl -n hw.model)
     echo
     echo "Device Model: $model"
@@ -295,7 +322,13 @@ get_install_os() {
     else printf "Catalina: ✖\n"
     fi
     echo
-    # Determine which partition scheme we are in
+
+}
+
+get_install_os() {
+    list_compatible_os
+	
+	# Determine which partition scheme we are in
 	if test -e "/Volumes/e/"; then
 		echo "Legacy partition scheme found"
 		alt_install_os
@@ -309,39 +342,11 @@ get_install_os() {
 }
 
 # Install macOS
-install_os() {
-    # Create associative arrays for file paths
-    declare -a asr_images
-    asr_images[1]="sequoia.dmg"
-    asr_images[2]="sonoma.dmg"
-    asr_images[3]="ventura.dmg"
-    asr_images[4]="monterey.dmg"
-    asr_images[5]="bigsur.dmg"
-    
-    declare -a installers
-    installers[1]="Install macOS Sequoia.app"
-    installers[2]="Install macOS Sonoma.app"
-    installers[3]="Install macOS Ventura.app"
-    installers[4]="Install macOS Monterey.app"
-    installers[5]="Install macOS Big Sur.app"
-    installers[6]="Install macOS Catalina.app"
-    installers[7]="Install macOS High Sierra.app"
-
-    
-    declare -a os_names
-    os_names[1]="Sequoia"
-    os_names[2]="Sonoma"
-    os_names[3]="Ventura"
-    os_names[4]="Monterey"
-    os_names[5]="Big Sur"
-    os_names[6]="Catalina"
-    os_names[7]="High Sierra"  
-
+install_os() {  
     select_os
-    select_install_method
+    #select_install_method
 
     format_disk
-
     
     echo "==== starting OS installation ===="    
 
@@ -350,14 +355,20 @@ install_os() {
     if [[ "$userOS" == 1 ]]; then
         check_internet
     fi
-    
-    if [[ "$userMethod" == 1 ]]; then
+
+	# Default to ASR if image exists, fallback to application otherwise
+    if [ -f  "$ASR_IMAGE_PATH${asr_images[$userOS]}" ]; then
         echo "${os_names[$userOS]} ASR install"
         run_asr_restore "$ASR_IMAGE_PATH${asr_images[$userOS]}"
-    elif [[ "$userMethod" == 2 ]]; then
-        echo "selected ${os_names[$userOS]} manual install"
-        run_manual_install "${installers[$userOS]}"
-    fi
+    elif [ -d "$INSTALLER_VOLUME_PATH${installers[$userOS]}" ]; then
+        echo "${os_names[$userOS]} application install"
+        run_application_install "${installers[$userOS]}"
+    else
+		echo "Could not find ASR image or installer application for the selected OS. Please check your drive"
+		echo "ASR path: $ASR_IMAGE_PATH${asr_images[$userOS]}"
+		echo "Application: $INSTALLER_VOLUME_PATH${installers[$userOS]}"
+		echo
+	fi
 }
 
 # Alternative installer for old usb partition scheme
@@ -386,22 +397,34 @@ alt_install_os() {
 
 
     alt_select_os
-    select_install_method
+    #select_install_method
 
     format_disk
 
     
     echo "==== starting OS installation ===="    
     
-    if [[ "$userMethod" == 1 ]]; then
+    if [ -f "${alt_asr_images[$userOS]}" ]; then
         echo "${alt_os_names[$userOS]} ASR install"
         run_asr_restore "${alt_asr_images[$userOS]}"
-    elif [[ "$userMethod" == 2 ]]; then
-        echo "selected ${alt_os_names[$userOS]} manual install"
-        alt_run_manual_install "${alt_installers[$userOS]}"
+    elif [ -d "${alt_installers[$userOS]}" ]; then
+        echo "selected ${alt_os_names[$userOS]} application install"
+        alt_run_application_install "${alt_installers[$userOS]}"
     fi
 }
 
+# Scan ASR image
+ASR_image_scan() { 
+	echo "Please select the image you would like to scan: "
+	select_os
+
+	echo "Starting scan of $ASR_IMAGE_PATH${asr_images[$userOS]}"
+    if asr imagescan -s "$ASR_IMAGE_PATH${asr_images[$userOS]}" &> /dev/null; then
+        echo "ASR image scan successful."
+    else
+        echo "ASR image scan failed"
+    fi	
+}
 # Restart system after resetting SMC and clearing NVRAM
 restart_system() {
     echo "restarting..."
@@ -427,21 +450,23 @@ main_menu() {
     until [ "$userQuit" = 1 ]; do
         echo 
         echo "===== macOS Installation and Recovery Tool ====="
-        echo "1. Elevated Security"
+        echo "1. Restore to Elevated Security Removal image"
         echo "2. Install OS"
-        echo "3. Restart System"
-        echo "4. Reset SMC and Clear NVRAM"
-        echo "5. Quit"
+        echo "3. Scan ASR image"
+        echo "4. Restart System"
+        echo "5. Reset SMC and Clear NVRAM"
+        echo "6. Quit"
         echo "================================================"
-        read -p "Enter your choice (1-5): " userinput
+        read -p "Enter your choice (1-6): " userinput
 
         case $userinput in
             1) get_elevated_security ;;
             2) get_install_os ;;
-            3) restart_system ;;
-            4) clear_smcnvram ;;
-            5) quit_script ;;
-            *) echo "Invalid choice. Please enter a number 1-5." ;;
+            3) ASR_image_scan ;;
+            4) restart_system ;;
+            5) clear_smcnvram ;;
+            6) quit_script ;;
+            *) echo "Invalid choice. Please enter a number 1-6." ;;
         esac
     done
 }
