@@ -168,7 +168,7 @@ run_application_install() {
 
     clear_smcnvram
 
-    echo "Starting manual install"
+    echo "Starting application install"
     "$INSTALLER_VOLUME_PATH$installer_path/Contents/Resources/startosinstall" --agreetolicense --volume "$INTERNAL_VOLUME_PATH"
 }
 
@@ -177,7 +177,7 @@ alt_run_application_install(){
 
     clear_smcnvram
 
-    echo "Starting manual install"
+    echo "Starting application install"
 	"$alt_installer_path/Contents/Resources/startosinstall" --agreetolicense --volume "$INTERNAL_VOLUME_PATH"
 }
 
@@ -242,10 +242,10 @@ alt_select_os() {
 select_install_method() {
     if [ "$userOS" -le 5 ] ; then
         echo
-        echo "Choose installation method: 1. ASR 2. Manual install"
+        echo "Choose installation method: 1. ASR 2. application install"
         read userMethod
         while ! [[ "$userMethod" =~ ^[1-2]$ ]]; do
-            echo "Invalid selection. Please enter 1 for ASR or 2 for Manual install."
+            echo "Invalid selection. Please enter 1 for ASR or 2 for application install."
             read userMethod
         done
     else 
@@ -356,7 +356,7 @@ install_os() {
     if [ -f  "$ASR_IMAGE_PATH${asr_images[$userOS]}" ]; then
         echo "${os_names[$userOS]} ASR install"
         run_asr_restore "$ASR_IMAGE_PATH${asr_images[$userOS]}"
-    elif [ -f "${installers[$userOS]}" ]; then
+    elif [ -d "$INSTALLER_VOLUME_PATH${installers[$userOS]}" ]; then
         echo "${os_names[$userOS]} application install"
         run_application_install "${installers[$userOS]}"
     else
@@ -402,7 +402,7 @@ alt_install_os() {
         echo "${alt_os_names[$userOS]} ASR install"
         run_asr_restore "${alt_asr_images[$userOS]}"
     elif [ -f "${alt_installers[$userOS]}" ]; then
-        echo "selected ${alt_os_names[$userOS]} manual install"
+        echo "selected ${alt_os_names[$userOS]} application install"
         alt_run_application_install "${alt_installers[$userOS]}"
     fi
 }
