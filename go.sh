@@ -361,6 +361,8 @@ install_os() {
         run_application_install "${installers[$userOS]}"
     else
 		echo "Could not find ASR image or installer application for the selected OS. Please check your drive"
+		echo "ASR path: $ASR_IMAGE_PATH${asr_images[$userOS]}"
+		echo "Application: $INSTALLER_VOLUME_PATH${installers[$userOS]}"
 		echo
 	fi
 }
