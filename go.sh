@@ -163,7 +163,7 @@ run_asr_restore() {
 }
 
 # Perform install through application
-run_manual_install() {
+run_application_install() {
     local installer_path="$1"
 
     clear_smcnvram
@@ -172,7 +172,7 @@ run_manual_install() {
     "$INSTALLER_VOLUME_PATH$installer_path/Contents/Resources/startosinstall" --agreetolicense --volume "$INTERNAL_VOLUME_PATH"
 }
 
-alt_run_manual_install(){
+alt_run_application_install(){
     local alt_installer_path="$1"
 
     clear_smcnvram
@@ -353,12 +353,12 @@ install_os() {
     fi
 
 	# Default to ASR if image exists, fallback to application otherwise
-    if [ -f  "$ASR_IMAGE_PATH${asr_images[$userOS]}"]; then
+    if [ -f  "$ASR_IMAGE_PATH${asr_images[$userOS]}" ]; then
         echo "${os_names[$userOS]} ASR install"
         run_asr_restore "$ASR_IMAGE_PATH${asr_images[$userOS]}"
     elif [ -f "${installers[$userOS]}" ]; then
         echo "${os_names[$userOS]} application install"
-        run_manual_install "${installers[$userOS]}"
+        run_application_install "${installers[$userOS]}"
     else
 		echo "Could not find ASR image or installer application for the selected OS. Please check your drive"
 		echo
@@ -403,7 +403,7 @@ alt_install_os() {
         run_asr_restore "${alt_asr_images[$userOS]}"
     elif [ -f "${alt_installers[$userOS]}" ]; then
         echo "selected ${alt_os_names[$userOS]} manual install"
-        alt_run_manual_install "${alt_installers[$userOS]}"
+        alt_run_application_install "${alt_installers[$userOS]}"
     fi
 }
 
