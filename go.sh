@@ -451,7 +451,7 @@ main_menu() {
         echo "===== macOS Installation and Recovery Tool ====="
         echo "1. Elevated Security"
         echo "2. Install OS"
-		echo "3. Scan ASR image"
+        echo "3. Scan ASR image"
         echo "4. Restart System"
         echo "5. Reset SMC and Clear NVRAM"
         echo "6. Quit"
@@ -461,7 +461,7 @@ main_menu() {
         case $userinput in
             1) get_elevated_security ;;
             2) get_install_os ;;
-			3) ASR_image_scan ;;
+            3) ASR_image_scan ;;
             4) restart_system ;;
             5) clear_smcnvram ;;
             6) quit_script ;;
