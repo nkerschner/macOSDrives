@@ -451,7 +451,7 @@ main_menu() {
         echo "5. Reset SMC and Clear NVRAM"
         echo "6. Quit"
         echo "================================================"
-        read -p "Enter your choice (1-5): " userinput
+        read -p "Enter your choice (1-6): " userinput
 
         case $userinput in
             1) get_elevated_security ;;
@@ -460,7 +460,7 @@ main_menu() {
             4) restart_system ;;
             5) clear_smcnvram ;;
             6) quit_script ;;
-            *) echo "Invalid choice. Please enter a number 1-5." ;;
+            *) echo "Invalid choice. Please enter a number 1-6." ;;
         esac
     done
 }
