@@ -2,7 +2,7 @@
 
 
 # macOS Installation and Elevated Security Removal Tool
-# v3.0-beta
+# v3.1-beta
 # https://github.com/nkerschner/macOSDrives
 
 
@@ -16,6 +16,32 @@ ES_SOURCE_PATH="/Volumes/ASR/cat.dmg"
 ALT_ES_SOURCE_PATH="Volumes/e/cat.dmg"
 INTERNAL_VOLUME_NAME="Macintosh HD"
 INTERNAL_VOLUME_PATH="/Volumes/Macintosh HD"
+
+# declare array of OS names
+declare -a os_names
+    os_names[1]="Tahoe"
+	os_names[2]="Sequoia"
+    os_names[3]="Sonoma"
+    os_names[4]="Ventura"
+    os_names[5]="Monterey"
+    os_names[6]="Big Sur"
+	
+# Create associative arrays for file paths
+declare -a asr_images
+	asr_images[1]="tahoe.dmg"
+    asr_images[2]="sequoia.dmg"
+    asr_images[3]="sonoma.dmg"
+    asr_images[4]="ventura.dmg"
+    asr_images[5]="monterey.dmg"
+    asr_images[6]="bigsur.dmg"
+    
+declare -a installers
+    installers[1]="Install macOS Tahoe.app"
+	installers[2]="Install macOS Sequoia.app"
+    installers[3]="Install macOS Sonoma.app"
+    installers[4]="Install macOS Ventura.app"
+	installers[5]="Install macOS Monterey.app"
+    installers[6]="Install macOS Big Sur.app"
 
 # Declare arrays for each MacOS version and compatible devices
 declare -a Catalina=("MacBookAir5,1" "MacBookAir5,2" "MacBookAir6,1" "MacBookAir6,2" "MacBookAir7,1" \
@@ -309,35 +335,7 @@ get_install_os() {
 }
 
 # Install macOS
-install_os() {
-    declare -a os_names
-    os_names[1]="Tahoe"
-	os_names[2]="Sequoia"
-    os_names[3]="Sonoma"
-    os_names[4]="Ventura"
-    os_names[5]="Monterey"
-    os_names[6]="Big Sur"
-	
-	# Create associative arrays for file paths
-    declare -a asr_images
-	asr_images[1]="tahoe.dmg"
-    asr_images[2]="sequoia.dmg"
-    asr_images[3]="sonoma.dmg"
-    asr_images[4]="ventura.dmg"
-    asr_images[5]="monterey.dmg"
-    asr_images[6]="bigsur.dmg"
-    
-    declare -a installers
-    installers[1]="Install macOS Tahoe.app"
-	installers[2]="Install macOS Sequoia.app"
-    installers[3]="Install macOS Sonoma.app"
-    installers[4]="Install macOS Ventura.app"
-	installers[5]="Install macOS Monterey.app"
-    installers[6]="Install macOS Big Sur.app"
-
-    
-    
-
+install_os() {  
     select_os
     #select_install_method
 
@@ -409,6 +407,17 @@ alt_install_os() {
     fi
 }
 
+# Scan ASR image
+ASR_image_scan() { 
+	echo "Please select the image you would like to scan: "
+	select_os
+
+    if asr imagescan -s "$ASR_IMAGE_PATH${asr_images[$userOS]}" &> /dev/null; then
+        echo "ASR image scan successful."
+    else
+        echo "ASR image scan failed"
+    fi	
+}
 # Restart system after resetting SMC and clearing NVRAM
 restart_system() {
     echo "restarting..."
@@ -436,18 +445,20 @@ main_menu() {
         echo "===== macOS Installation and Recovery Tool ====="
         echo "1. Elevated Security"
         echo "2. Install OS"
-        echo "3. Restart System"
-        echo "4. Reset SMC and Clear NVRAM"
-        echo "5. Quit"
+		echo "3. Scan ASR image"
+        echo "4. Restart System"
+        echo "5. Reset SMC and Clear NVRAM"
+        echo "6. Quit"
         echo "================================================"
         read -p "Enter your choice (1-5): " userinput
 
         case $userinput in
             1) get_elevated_security ;;
             2) get_install_os ;;
-            3) restart_system ;;
-            4) clear_smcnvram ;;
-            5) quit_script ;;
+			3) ASR_image_scan ;;
+            4) restart_system ;;
+            5) clear_smcnvram ;;
+            6) quit_script ;;
             *) echo "Invalid choice. Please enter a number 1-5." ;;
         esac
     done
