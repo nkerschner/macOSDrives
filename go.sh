@@ -290,8 +290,8 @@ hasVersion() {
     [[ " $model_list " == *" $needle "* ]]
 }
 
-get_install_os() {
-    # Get device model name
+list_compatible_os() {
+	# Get device model name
     model=$(sysctl -n hw.model)
     echo
     echo "Device Model: $model"
@@ -321,7 +321,13 @@ get_install_os() {
     else printf "Catalina: ✖\n"
     fi
     echo
-    # Determine which partition scheme we are in
+
+}
+
+get_install_os() {
+    list_compatible_os
+	
+	# Determine which partition scheme we are in
 	if test -e "/Volumes/e/"; then
 		echo "Legacy partition scheme found"
 		alt_install_os
@@ -340,7 +346,6 @@ install_os() {
     #select_install_method
 
     format_disk
-
     
     echo "==== starting OS installation ===="    
 
