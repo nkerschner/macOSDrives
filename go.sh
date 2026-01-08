@@ -192,7 +192,7 @@ update_installer() {
 #    if ! diff -q "$REMOTE_INSTALLER_REPOSITORY${os_names[$userOS]}" "$INSTALLER_VOLUME_PATH${os_names[$userOS]}" >/dev/null; then
      if ! false; then
         echo "Installer update detected"
-        echo ""downloading $REMOTE_INSTALLER_REPOSITORY${remote_installers[$userOS]}" to "$UPDATE_ZIP_TEMP_DIR${remote_installers[$userOS]}""
+        echo '"downloading $REMOTE_INSTALLER_REPOSITORY${remote_installers[$userOS]}" to "$UPDATE_ZIP_TEMP_DIR${remote_installers[$userOS]}"'
         curl "$REMOTE_INSTALLER_REPOSITORY${remote_installers[$userOS]}" --output "$UPDATE_ZIP_TEMP_DIR${remote_installers[$userOS]}"
 
         echo "Unzipping new installer"
