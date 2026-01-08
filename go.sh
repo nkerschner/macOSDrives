@@ -187,13 +187,13 @@ check_internet() {
     echo ""
 }
 
-update_installer(){
+update_installer() {
     echo "Checking for updated installer...."
     if ! diff -q "$REMOTE_INSTALLER_REPOSITORY${os_names[$userOS]}" "$INSTALLER_VOLUME_PATH${os_names[$userOS]}" >/dev/null; then
         echo "Installer update detected. Downloading now"
         curl "$REMOTE_INSTALLER_REPOSITORY${remote_installers[$userOS]}" --output "$UPDATE_ZIP_TEMP_DIR${remote_installers[$userOS]}"
         echo "Unzipping new installer"
-        unzip -o "$UPDATE_ZIP_TEMP_DIR${remote_installers[$userOS]}"" -d "$INSTALLER_VOLUME_PATH"
+        unzip -o "$UPDATE_ZIP_TEMP_DIR${remote_installers[$userOS]}" -d "$INSTALLER_VOLUME_PATH"
         echo "Cleaning up"
         rm "$UPDATE_ZIP_TEMP_DIR${remote_installers[$userOS]}"
     else
