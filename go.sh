@@ -46,12 +46,12 @@ declare -a installers
     installers[6]="Install macOS Big Sur.app"
 
 declare -a remote_installers
-    remote_installers[1]="Install macOS Tahoe.zip"
-	remote_installers[2]="Install macOS Sequoia.zip"
-    remote_installers[3]="Install macOS Sonoma.zip"
-    remote_installers[4]="Install macOS Ventura.zip"
-	remote_installers[5]="Install macOS Monterey.zip"
-    remote_installers[6]="Install macOS Big Sur.zip"
+    remote_installers[1]="Install-macOS-Tahoe.zip"
+	remote_installers[2]="Install-macOS-Sequoia.zip"
+    remote_installers[3]="Install-macOS-Sonoma.zip"
+    remote_installers[4]="Install-macOS-Ventura.zip"
+	remote_installers[5]="Install-macOS-Monterey.zip"
+    remote_installers[6]="Install-macOS-Big Sur.zip"
 
 # Declare arrays for each MacOS version and compatible devices
 declare -a Catalina=("MacBookAir5,1" "MacBookAir5,2" "MacBookAir6,1" "MacBookAir6,2" "MacBookAir7,1" \
@@ -191,9 +191,10 @@ update_installer() {
     echo "Checking for updated installer...."
 #    if ! diff -q "$REMOTE_INSTALLER_REPOSITORY${os_names[$userOS]}" "$INSTALLER_VOLUME_PATH${os_names[$userOS]}" >/dev/null; then
      if ! false; then
-        echo "Installer update detected. Downloading now"
-        #curl "$REMOTE_INSTALLER_REPOSITORY${remote_installers[$userOS]}" --output "$UPDATE_ZIP_TEMP_DIR${remote_installers[$userOS]}"
-        echo "$REMOTE_INSTALLER_REPOSITORY${remote_installers[$userOS]}"
+        echo "Installer update detected"
+        echo "downloading $REMOTE_INSTALLER_REPOSITORY${remote_installers[$userOS]} to "$UPDATE_ZIP_TEMP_DIR${remote_installers[$userOS]}"
+        curl "$REMOTE_INSTALLER_REPOSITORY${remote_installers[$userOS]}" --output "$UPDATE_ZIP_TEMP_DIR${remote_installers[$userOS]}"
+
         echo "Unzipping new installer"
         unzip -o "$UPDATE_ZIP_TEMP_DIR${remote_installers[$userOS]}" -d "$INSTALLER_VOLUME_PATH"
         echo "Cleaning up"
