@@ -10,12 +10,14 @@ cd /
 userQuit=0
 
 # declare default paths
-ASR_IMAGE_PATH="/Volumes/ASR/"
-INSTALLER_VOLUME_PATH="/Volumes/FULL/Applications/"
-ES_SOURCE_PATH="/Volumes/ASR/cat.dmg"
-ALT_ES_SOURCE_PATH="Volumes/e/cat.dmg"
-INTERNAL_VOLUME_NAME="Macintosh HD"
-INTERNAL_VOLUME_PATH="/Volumes/Macintosh HD"
+readonly ASR_IMAGE_PATH="/Volumes/ASR/"
+readonly INSTALLER_VOLUME_PATH="/Volumes/FULL/Applications/"
+readonly ES_SOURCE_PATH="/Volumes/ASR/cat.dmg"
+readonly ALT_ES_SOURCE_PATH="Volumes/e/cat.dmg"
+readonly INTERNAL_VOLUME_NAME="Macintosh HD"
+readonly INTERNAL_VOLUME_PATH="/Volumes/Macintosh HD"
+readonly REMOTE_INSTALLER_REPOSITORY="http://10.100.10.63/macOS_Installers/" #current testing repo, /not/ production ready
+readonly UPDATE_ZIP_TEMP_DIR="/Volumes/ASR/"
 
 # declare array of OS names
 declare -a os_names
@@ -42,6 +44,14 @@ declare -a installers
     installers[4]="Install macOS Ventura.app"
 	installers[5]="Install macOS Monterey.app"
     installers[6]="Install macOS Big Sur.app"
+
+declare -a remote_installers
+    remote_installers[1]="Install macOS Tahoe.zip"
+	remote_installers[2]="Install macOS Sequoia.zip"
+    remote_installers[3]="Install macOS Sonoma.zip"
+    remote_installers[4]="Install macOS Ventura.zip"
+	remote_installers[5]="Install macOS Monterey.zip"
+    remote_installers[6]="Install macOS Big Sur.zip"
 
 # Declare arrays for each MacOS version and compatible devices
 declare -a Catalina=("MacBookAir5,1" "MacBookAir5,2" "MacBookAir6,1" "MacBookAir6,2" "MacBookAir7,1" \
@@ -177,6 +187,20 @@ check_internet() {
     echo ""
 }
 
+update_installer(){
+    echo "Checking for updated installer...."
+    if ! diff -q "$REMOTE_INSTALLER_REPOSITORY$os_names[$userOS]" "$INSTALLER_VOLUME_PATH$os_names[$userOS]" >/dev/null; then
+        echo "Installer update detected. Downloading now"
+        curl "$REMOTE_INSTALLER_REPOSITORY$remote_installers[$userOS]" --output "$UPDATE_ZIP_TEMP_DIR$remote_installers[$userOS]"
+        echo "Unzipping new installer"
+        unzip -o "$UPDATE_ZIP_TEMP_DIR$remote_installers[$userOS]" -d "$INSTALLER_VOLUME_PATH"
+        echo "Cleaning up"
+        rm "$UPDATE_ZIP_TEMP_DIR$remote_installers[$userOS]"
+    else
+        echo "Latest installer detected on USB"
+    fi
+}
+
 # Perform ASR restore
 run_asr_restore() {
     local source_image=$1
@@ -192,6 +216,8 @@ run_asr_restore() {
 # Perform install through application
 run_application_install() {
     local installer_path="$1"
+
+    update_installer
 
     clear_smcnvram
 
