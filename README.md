@@ -25,7 +25,7 @@ Description: Contains the ASR images
 
 ## Using Mist for macOS installers
 Mist is a helpful tool for downloading macOS Firmwares and Installers.
-It can be found at: [](https://github.com/ninxsoft/Mist) 
+It can be found at: [https://github.com/ninxsoft/Mist](https://github.com/ninxsoft/Mist) 
 
 # Running the script
 Run the script from the recoveryOS terminal with the command `sh -c "$(curl -fsSL mac.nscott.xyz/go.sh)"`
