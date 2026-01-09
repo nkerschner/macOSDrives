@@ -1,5 +1,5 @@
 # Creating a macOS Drive
-Minimum drive size required is 256GB
+Minimum drive size required is 256GB  
 
 ## Partitions
 
@@ -44,6 +44,16 @@ For each desired installer application, click the left button with the download 
 Select the Applications directory on the FULL partition as the destination  
 Select only Application as the Export type  
 Mist will download the installer into the folder  
+Repeat for each desired installer application  
+
+## Installing Big Sur to Big Sur Boot
+Boot to Install macOS Big Sur\
+Format the Big Sur Boot partition\
+Run the installer application\
+Select the Big Sur Boot partition as the target for installation\
+Agree to the terms of service\
+Let the installer run\
+NOTE: After installation on a USB, the Big Sur Boot partition may not actually be bootable. However, it will still allow bypassing Internet Recovery through the Big Sur recoveryOS\
 
 # Running the script
 Run the script from the recoveryOS terminal with the command `sh -c "$(curl -fsSL mac.nscott.xyz/go.sh)"`  
