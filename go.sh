@@ -404,6 +404,11 @@ install_os() {
 	fi
 }
 
+test_installer_update() {  
+    select_os
+    update_installer "${installers[$userOS]}"
+}
+
 # Alternative installer for old usb partition scheme
 alt_install_os() {
     # Create array of hardcoded dmg paths in the old usb scheme
@@ -488,9 +493,10 @@ main_menu() {
         echo "3. Scan ASR image"
         echo "4. Restart System"
         echo "5. Reset SMC and Clear NVRAM"
-        echo "6. Quit"
+        echo "6. Test Installer Update"
+        echo "7. Quit"
         echo "================================================"
-        read -p "Enter your choice (1-6): " userinput
+        read -p "Enter your choice (1-7): " userinput
 
         case $userinput in
             1) get_elevated_security ;;
@@ -498,8 +504,9 @@ main_menu() {
             3) ASR_image_scan ;;
             4) restart_system ;;
             5) clear_smcnvram ;;
-            6) quit_script ;;
-            *) echo "Invalid choice. Please enter a number 1-6." ;;
+            6) test_installer_update ;;
+            7) quit_script ;;
+            *) echo "Invalid choice. Please enter a number 1-7." ;;
         esac
     done
 }
