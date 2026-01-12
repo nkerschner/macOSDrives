@@ -2,7 +2,7 @@
 
 
 # macOS Installation and Elevated Security Removal Tool
-# v3.1
+# v4.0-alpha
 # https://github.com/nkerschner/macOSDrives
 
 
