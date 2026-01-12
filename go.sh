@@ -359,7 +359,7 @@ list_compatible_os() {
 }
 
 get_install_os() {
-    source ./"$(curl -fsSL raw.githubusercontent.com/nkerschner/macOSDrives/refs/heads/Auto_installer_update/compatible_os.sh)"
+    source -c "$(curl -fsSL raw.githubusercontent.com/nkerschner/macOSDrives/refs/heads/Auto_installer_update/compatible_os.sh)"
 	
 	# Determine which partition scheme we are in
 	if test -e "/Volumes/e/"; then
