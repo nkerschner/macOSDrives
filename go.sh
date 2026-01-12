@@ -359,7 +359,7 @@ list_compatible_os() {
 }
 
 get_install_os() {
-    list_compatible_os
+    source ./compatible_os.sh
 	
 	# Determine which partition scheme we are in
 	if test -e "/Volumes/e/"; then
