@@ -16,7 +16,7 @@ readonly ES_SOURCE_PATH="/Volumes/ASR/cat.dmg"
 readonly ALT_ES_SOURCE_PATH="Volumes/e/cat.dmg"
 readonly INTERNAL_VOLUME_NAME="Macintosh HD"
 readonly INTERNAL_VOLUME_PATH="/Volumes/Macintosh HD"
-readonly REMOTE_INSTALLER_REPOSITORY="http://10.100.10.63/macOS_Installers/" #current testing repo, /not/ production ready
+readonly REMOTE_INSTALLER_REPOSITORY="http://10.50.0.190/macos/installers/" #current testing repo, /not/ production ready
 readonly UPDATE_ZIP_TEMP_DIR="/Volumes/ASR/"
 
 # declare array of OS names
@@ -192,8 +192,12 @@ update_installer() {
 #    if ! diff -q "$REMOTE_INSTALLER_REPOSITORY${os_names[$userOS]}" "$INSTALLER_VOLUME_PATH${os_names[$userOS]}" >/dev/null; then
      if ! false; then
         echo "Installer update detected...."
+        
         echo 'Downloading "$REMOTE_INSTALLER_REPOSITORY${remote_installers[$userOS]}" to "$UPDATE_ZIP_TEMP_DIR${remote_installers[$userOS]}"....'
         curl "$REMOTE_INSTALLER_REPOSITORY${remote_installers[$userOS]}" --output "$UPDATE_ZIP_TEMP_DIR${remote_installers[$userOS]}"
+
+        echo "Downloading updated checksum"
+        curl "$REMOTE_INSTALLER_REPOSITORY${os_names[$userOS]}" --output "$INSTALLER_VOLUME_PATH"
 
         echo "Unzipping new installer...."
         unzip -o "$UPDATE_ZIP_TEMP_DIR${remote_installers[$userOS]}" -d "$INSTALLER_VOLUME_PATH"
