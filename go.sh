@@ -197,7 +197,7 @@ update_installer() {
         curl "$REMOTE_INSTALLER_REPOSITORY${remote_installers[$userOS]}" --output "$UPDATE_ZIP_TEMP_DIR${remote_installers[$userOS]}"
 
         echo "Downloading updated checksum"
-        curl "$REMOTE_INSTALLER_REPOSITORY${os_names[$userOS]}" --output "$INSTALLER_VOLUME_PATH"
+        curl "$REMOTE_INSTALLER_REPOSITORY${os_names[$userOS]}.txt" --output "$INSTALLER_VOLUME_PATH${os_names[$userOS]}.txt"
 
         echo "Unzipping new installer...."
         unzip -o "$UPDATE_ZIP_TEMP_DIR${remote_installers[$userOS]}" -d "$INSTALLER_VOLUME_PATH"
