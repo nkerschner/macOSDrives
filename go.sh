@@ -193,7 +193,7 @@ update_installer() {
      if ! false; then
         echo "Installer update detected...."
         
-        echo 'Downloading "$REMOTE_INSTALLER_REPOSITORY${remote_installers[$userOS]}" to "$UPDATE_ZIP_TEMP_DIR${remote_installers[$userOS]}"....'
+        echo "Downloading $REMOTE_INSTALLER_REPOSITORY${remote_installers[$userOS]} to $UPDATE_ZIP_TEMP_DIR${remote_installers[$userOS]}...."
         curl "$REMOTE_INSTALLER_REPOSITORY${remote_installers[$userOS]}" --output "$UPDATE_ZIP_TEMP_DIR${remote_installers[$userOS]}"
 
         echo "Downloading updated checksum"
