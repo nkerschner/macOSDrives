@@ -9,6 +9,7 @@
 cd /
 userQuit=0
 
+
 # declare default paths
 readonly ASR_IMAGE_PATH="/Volumes/ASR/"
 readonly INSTALLER_VOLUME_PATH="/Volumes/FULL/Applications/"
@@ -359,7 +360,8 @@ list_compatible_os() {
 }
 
 get_install_os() {
-    #source -c "$(curl -fsSL raw.githubusercontent.com/nkerschner/macOSDrives/refs/heads/Auto_installer_update/compatible_os.sh)"
+    curl -fsSL https://raw.githubusercontent.com/nkerschner/macOSDrives/refs/heads/Auto_installer_update/compatible_os.sh -o /tmp/compatible_os.sh
+    source /tmp/compatible_os.sh
 	
 	# Determine which partition scheme we are in
 	if test -e "/Volumes/e/"; then
