@@ -69,12 +69,26 @@ declare -a Sequoia=("Mac16,8" "Mac16,7" "Mac16,6" "Mac16,5" "Mac16,1" \
     "Mac15,6" "Mac15,3" "Mac14,10" "Mac14,9" "Mac14,7" \
     "Mac14,6" "Mac14,5" "MacBookPro18,4" "MacBookPro18,3" "MacBookPro18,2" \
     "MacBookPro18,1" "MacBookPro17,1" "MacBookPro16,4" "MacBookPro16,3" "MacBookPro16,2" \
-    "MacBookPro16,1" "MacBookPro15,4" "MacBookPro15,2" "MacBookPro15,1" "Mac16,13" \
+    "MacBookPro16,1" "MacBookPro15,4" "MacBookPro15,3" "MacBookPro15,2" "MacBookPro15,1" "Mac16,13" \
     "Mac16,12" "Mac15,13" "Mac15,12" "Mac14,15" "Mac14,2" \
     "MacBookAir10,1" "MacBookAir9,1" "iMacPro1,1" "Mac16,3" "Mac15,5" \
     "iMac21,2" "iMac21,1" "iMac20,2" "iMac20,1" "iMac19,2" \
     "iMac19,1" "Mac16,15" "Mac16,11" "Mac16,10" "Mac14,3" \
     "Mac14,12" "Macmini9,1" "Macmini8,1" "Mac16,9" "Mac15,14" \
+    "Mac14,14" "Mac14,13" "Mac13,2" "Mac13,1" "Mac14,8" \
+    "MacPro7,1")
+
+declare -a Tahoe=("Mac17,2" "Mac16,8" "Mac16,7" "Mac16,6" "Mac16,5" "Mac16,1" \
+    "Mac15,11" "Mac15,10" "Mac15,9" "Mac15,8" "Mac15,7" \
+    "Mac15,6" "Mac15,3" "Mac14,10" "Mac14,9" "Mac14,7" \
+    "Mac14,6" "Mac14,5" "MacBookPro18,4" "MacBookPro18,3" "MacBookPro18,2" \
+    "MacBookPro18,1" "MacBookPro17,1" "MacBookPro16,4" "MacBookPro16,3" \
+    "MacBookPro16,2" "MacBookPro16,1" "Mac16,13" \
+    "Mac16,12" "Mac15,13" "Mac15,12" "Mac14,15" "Mac14,2" \
+    "MacBookAir10,1" "Mac16,3" "Mac15,5" \
+    "iMac21,2" "iMac21,1" "iMac20,2" "iMac20,1" \
+    "Mac16,15" "Mac16,11" "Mac16,10" "Mac14,3" \
+    "Mac14,12" "Macmini9,1" "Mac16,9" "Mac15,14" \
     "Mac14,14" "Mac14,13" "Mac13,2" "Mac13,1" "Mac14,8" \
     "MacPro7,1")
 
@@ -95,6 +109,10 @@ list_compatible_os() {
     echo "Device Model: $model"
 
     # Run a version compatibility check for the current device model
+    if hasVersion "$model" "${Tahoe[@]}"; then printf "Tahoe: ✔ "
+    else printf "Tahoe: ✖ "
+    fi
+
     if hasVersion "$model" "${Sequoia[@]}"; then printf "Sequoia: ✔ "
     else printf "Sequoia: ✖ "
     fi
