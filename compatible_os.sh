@@ -121,3 +121,5 @@ list_compatible_os() {
     echo
 
 }
+
+list_compatible_os
