@@ -119,8 +119,12 @@ update_installer() {
         echo "Downloading $REMOTE_INSTALLER_REPOSITORY${remote_installers[$userOS]} to $UPDATE_ZIP_TEMP_DIR${remote_installers[$userOS]}...."
         curl "$REMOTE_INSTALLER_REPOSITORY${remote_installers[$userOS]}" --output "$UPDATE_ZIP_TEMP_DIR${remote_installers[$userOS]}"
 
-        echo "Downloading updated checksum"
-        curl "$REMOTE_INSTALLER_REPOSITORY${os_names[$userOS]}.txt" --output "$INSTALLER_VOLUME_PATH${os_names[$userOS]}.txt"
+        echo "Downloading updated checksum...."
+        curl "$REMOTE_INSTALLER_REPOSITORY${os_names[$userOS]}.txt" --output "$UPDATE_ZIP_TEMP_DIR${os_names[$userOS]}.txt"
+
+        echo "Checking downloaded installer file integrity...."
+        shasum -a 256 "$UPDATE_ZIP_TEMP_DIR${os_names[$userOS]}.txt"
+        mv "$UPDATE_ZIP_TEMP_DIR${os_names[$userOS]}.txt" "$INSTALLER_VOLUME_PATH${os_names[$userOS]}.txt"
 
         echo "Unzipping new installer...."
         unzip -o "$UPDATE_ZIP_TEMP_DIR${remote_installers[$userOS]}" -d "$INSTALLER_VOLUME_PATH"
