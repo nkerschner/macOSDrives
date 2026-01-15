@@ -3,7 +3,7 @@
 readonly application_repo="http://10.50.0.190/macos/installers/"
 readonly applications_dir="/Volumes/Full/Applications/"
 readonly temp_dir="/Volumes/ASR/"
-declare -a installers=("Install-macOS-Tahoe.zip" "Install-macOS-Sequoia.zip" "Install-macOS-Sonoma.zip")
+declare -a installers=("Install-macOS-Tahoe.zip" "Install-macOS-Sequoia.zip" "Install-macOS-Sonoma.zip" "Install-macOS-Big-Sur.zip")
 
 readonly asr_repo="http://10.50.0.190/macos/asr/"
 readonly asr_dir="/Volumes/ASR/"
