@@ -38,7 +38,7 @@ get_external_disk() {
 format_drive(){
     diskutil partitionDisk $macOSDrive 4 APFS FULL 100G \
         JHFS+ BigSur 14G \
-        APFS Boot 32G \
+        APFS Boot 35G \
         APFS ASR 100G
     mkdir $applications_dir
 }
@@ -58,12 +58,13 @@ download_asr_images(){
 }
 
 create_big_sur_installer(){
-    #$applications_dir
-    echo "working on it lol"
+    $applications_dir/Install\ macOS\ Big\ Sur.app/Contents/Resources/createinstallmedia \
+        --volume /Volumes/BigSur --nointeraction
 }
 
 install_to_boot(){
-    echo "working on this too lol"
+    $applications_dir/Install\ macOS\ Big\ Sur.app/Contents/Resources/startosinstall \
+        --agreetolicense --volume /Volumes/BigSur
 }
 
 get_external_disk
