@@ -52,7 +52,7 @@ declare -a remote_installers
     remote_installers[3]="Install-macOS-Sonoma.zip"
     remote_installers[4]="Install-macOS-Ventura.zip"
 	remote_installers[5]="Install-macOS-Monterey.zip"
-    remote_installers[6]="Install-macOS-Big Sur.zip"
+    remote_installers[6]="Install-macOS-Big-Sur.zip"
 
 # Get the internal disk
 get_internal_disk() {
