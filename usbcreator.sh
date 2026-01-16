@@ -20,6 +20,7 @@ get_external_disk() {
         macOSDrive=${EXTERNAL_DISKS[0]}
     else
         echo "Multiple external disks detected:"
+        diskutil list external physical
         for i in "${!EXTERNAL_DISKS[@]}"; do
             echo "$((i+1)). ${EXTERNAL_DISKS[i]}"
         done
