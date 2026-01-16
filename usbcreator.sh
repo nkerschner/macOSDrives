@@ -36,7 +36,7 @@ get_external_disk() {
     echo
 }
 
-format_drive(){
+prepare_drive(){
     diskutil partitionDisk $macOSDrive 4 APFS FULL 100G \
         JHFS+ BigSur 14G \
         APFS Boot 36G \
@@ -69,7 +69,7 @@ install_to_boot(){
 }
 
 get_external_disk
-format_drive
+prepare_drive
 download_installers
 download_asr_images
 create_big_sur_installer
