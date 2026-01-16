@@ -64,7 +64,7 @@ create_big_sur_installer(){
 
 install_to_boot(){
     $applications_dir/Install\ macOS\ Big\ Sur.app/Contents/Resources/startosinstall \
-        --agreetolicense --volume /Volumes/BigSur
+        --agreetolicense --volume /Volumes/Boot
 }
 
 get_external_disk
