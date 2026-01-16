@@ -37,7 +37,8 @@ get_external_disk() {
 }
 
 prepare_drive(){
-    diskutil partitionDisk $macOSDrive 4 APFS FULL 100G \
+    diskutil partitionDisk $macOSDrive 4 \
+        APFS FULL 100G \
         JHFS+ BigSur 14G \
         APFS Boot 36G \
         APFS ASR 100G
