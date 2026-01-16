@@ -38,7 +38,7 @@ get_external_disk() {
 format_drive(){
     diskutil partitionDisk $macOSDrive 4 APFS FULL 100G \
         JHFS+ BigSur 14G \
-        APFS Boot 35G \
+        APFS Boot 36G \
         APFS ASR 100G
     mkdir $applications_dir
 }
