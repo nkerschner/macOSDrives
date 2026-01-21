@@ -115,7 +115,7 @@ update_installer() {
     local current_chksum=$(<"$INSTALLER_VOLUME_PATH${os_names[$userOS]}.txt")
     local new_chksum=$(curl "$REMOTE_INSTALLER_REPOSITORY${os_names[$userOS]}.txt")
     echo "Current Checksum: $current_chksum"
-    echo "New Checksum: $new_cksum"
+    echo "New Checksum: $new_chksum"
 
     if [[ "$current_chksum" != "$new_chksum" ]] ; then
         echo "Installer update detected...."
