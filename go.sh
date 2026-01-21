@@ -2,7 +2,7 @@
 
 
 # macOS Installation and Elevated Security Removal Tool
-# v4.0-alpha
+# v4.0-beta
 # https://github.com/nkerschner/macOSDrives
 
 
@@ -18,6 +18,7 @@ readonly ALT_ES_SOURCE_PATH="Volumes/e/cat.dmg"
 readonly INTERNAL_VOLUME_NAME="Macintosh HD"
 readonly INTERNAL_VOLUME_PATH="/Volumes/Macintosh HD"
 readonly REMOTE_INSTALLER_REPOSITORY="http://10.50.0.190/macos/installers/" #current testing repo, /not/ production ready
+readonly REMOTE_ASR_REPOSITORY="http://10.50.0.190/macos/asr/" #current testing repo, /not/ production ready
 readonly UPDATE_ZIP_TEMP_DIR="/Volumes/ASR/"
 
 # declare array of OS names
@@ -148,6 +149,36 @@ update_installer() {
         fi
     else
         echo "Latest installer detected on USB...."
+    fi
+}
+
+update_image() {
+    echo "Checking for updated image...."
+    if [ -f "$ASR_IMAGE_PATH${os_names[$userOS]}.txt" ]; then
+        local current_chksum=$(<"$ASR_IMAGE_PATH${os_names[$userOS]}.txt")
+    else
+        local current_chksum="does not exist"
+    fi
+    local new_chksum=$(curl -s "$REMOTE_ASR_REPOSITORY${os_names[$userOS]}.txt")
+    echo "Current Checksum: $current_chksum"
+    echo "New Checksum: $new_chksum"
+
+    if [[ "$current_chksum" != "$new_chksum" ]] ; then
+        echo "Image update detected...."
+        
+        echo "Downloading $REMOTE_ASR_REPOSITORY${asr_images[$userOS]} to $ASR_IMAGE_PATH${asr_images[$userOS]}...."
+        if ! curl "$REMOTE_ASR_REPOSITORY${asr_images[$userOS]}" --output "$ASR_IMAGE_PATH${asr_images[$userOS]}" ; then
+            echo "Error downloading updated installer, exiting...."
+            return 1
+        fi
+
+        echo "Updating installer checksum...."
+        if ! curl "$REMOTE_INSTALLER_REPOSITORY${os_names[$userOS]}.txt" --output "$INSTALLER_VOLUME_PATH${os_names[$userOS]}.txt" ; then
+            echo "Error downloading updated checksum, exiting...."
+            return 1
+        fi
+    else
+        echo "Latest image detected on USB...."
     fi
 }
 
