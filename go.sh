@@ -92,9 +92,9 @@ format_disk() {
     echo ""
 }
 
-# Perform SMC reset and NVRAM clear
+# Perform power management settings reset and NVRAM clear
 clear_smcnvram() {
-    echo "==== resetting SMC and clearing NVRAM ===="
+    echo "==== resetting power management settings and clearing NVRAM ===="
     pmset -a restoredefaults && nvram -c
     echo ""
 }
@@ -392,7 +392,7 @@ main_menu() {
         echo "2. Install OS"
         echo "3. Scan ASR image"
         echo "4. Restart System"
-        echo "5. Reset SMC and Clear NVRAM"
+        echo "5. Reset Power Management Settings and Clear NVRAM"
         echo "6. Test Installer Update"
         echo "7. Quit"
         echo "================================================"
