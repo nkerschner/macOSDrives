@@ -113,7 +113,7 @@ check_internet() {
 update_installer() {
     echo "Checking for updated installer...."
     local current_chksum=$(<"$INSTALLER_VOLUME_PATH${os_names[$userOS]}.txt")
-    local new_chksum=$(curl "$REMOTE_INSTALLER_REPOSITORY${os_names[$userOS]}.txt")
+    local new_chksum=$(curl -s "$REMOTE_INSTALLER_REPOSITORY${os_names[$userOS]}.txt")
     echo "Current Checksum: $current_chksum"
     echo "New Checksum: $new_chksum"
 
