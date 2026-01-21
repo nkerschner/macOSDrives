@@ -112,7 +112,11 @@ check_internet() {
 
 update_installer() {
     echo "Checking for updated installer...."
-    local current_chksum=$(<"$INSTALLER_VOLUME_PATH${os_names[$userOS]}.txt")
+    if [ -f "$INSTALLER_VOLUME_PATH${os_names[$userOS]}.txt" ]; then
+        local current_chksum=$(<"$INSTALLER_VOLUME_PATH${os_names[$userOS]}.txt")
+    else
+        local current_chksum="does not exist"
+    fi
     local new_chksum=$(curl -s "$REMOTE_INSTALLER_REPOSITORY${os_names[$userOS]}.txt")
     echo "Current Checksum: $current_chksum"
     echo "New Checksum: $new_chksum"
@@ -121,13 +125,27 @@ update_installer() {
         echo "Installer update detected...."
         
         echo "Downloading $REMOTE_INSTALLER_REPOSITORY${remote_installers[$userOS]} to $UPDATE_ZIP_TEMP_DIR${remote_installers[$userOS]}...."
-        curl "$REMOTE_INSTALLER_REPOSITORY${remote_installers[$userOS]}" --output "$UPDATE_ZIP_TEMP_DIR${remote_installers[$userOS]}"
-        curl "$REMOTE_INSTALLER_REPOSITORY${os_names[$userOS]}.txt" --output "$INSTALLER_VOLUME_PATH${os_names[$userOS]}.txt"
+        if ! curl "$REMOTE_INSTALLER_REPOSITORY${remote_installers[$userOS]}" --output "$UPDATE_ZIP_TEMP_DIR${remote_installers[$userOS]}" ; then
+            echo "Error downloading updated installer, exiting...."
+            return 1
+        fi
 
-        echo "Unzipping new installer...."
-        unzip -o "$UPDATE_ZIP_TEMP_DIR${remote_installers[$userOS]}" -d "$INSTALLER_VOLUME_PATH"
+        echo "Extracting new installer...."
+        if ! unzip -o "$UPDATE_ZIP_TEMP_DIR${remote_installers[$userOS]}" -d "$INSTALLER_VOLUME_PATH" ; then
+            echo "Error extracting new installer, exiting...."
+            return 1
+        fi
+
+        echo "Updating installer checksum...."
+        if ! curl "$REMOTE_INSTALLER_REPOSITORY${os_names[$userOS]}.txt" --output "$INSTALLER_VOLUME_PATH${os_names[$userOS]}.txt" ; then
+            echo "Error downloading updated checksum, exiting...."
+            return 1
+        fi
+
         echo "Cleaning up...."
-        rm "$UPDATE_ZIP_TEMP_DIR${remote_installers[$userOS]}"
+        if ! rm "$UPDATE_ZIP_TEMP_DIR${remote_installers[$userOS]}" ; then
+            echo "Error removing temporary installer zip file, may need to manually remove...."
+        fi
     else
         echo "Latest installer detected on USB...."
     fi
