@@ -112,19 +112,17 @@ check_internet() {
 
 update_installer() {
     echo "Checking for updated installer...."
-#    if ! diff -q "$REMOTE_INSTALLER_REPOSITORY${os_names[$userOS]}" "$INSTALLER_VOLUME_PATH${os_names[$userOS]}" >/dev/null; then
-     if ! false; then
+    local current_chksum=$(<"$INSTALLER_VOLUME_PATH${os_names[$userOS]}.txt")
+    local new_chksum=$(curl "$REMOTE_INSTALLER_REPOSITORY${os_names[$userOS]}.txt")
+    echo "Current Checksum: $current_chksum"
+    echo "New Checksum: $new_cksum"
+
+    if [[ "$current_chksum" != "$new_chksum" ]] ; then
         echo "Installer update detected...."
         
         echo "Downloading $REMOTE_INSTALLER_REPOSITORY${remote_installers[$userOS]} to $UPDATE_ZIP_TEMP_DIR${remote_installers[$userOS]}...."
         curl "$REMOTE_INSTALLER_REPOSITORY${remote_installers[$userOS]}" --output "$UPDATE_ZIP_TEMP_DIR${remote_installers[$userOS]}"
-
-        echo "Downloading updated checksum...."
-        curl "$REMOTE_INSTALLER_REPOSITORY${os_names[$userOS]}.txt" --output "$UPDATE_ZIP_TEMP_DIR${os_names[$userOS]}.txt"
-
-        echo "Checking downloaded installer file integrity...."
-        shasum -a 256 "$UPDATE_ZIP_TEMP_DIR${os_names[$userOS]}.txt"
-        mv "$UPDATE_ZIP_TEMP_DIR${os_names[$userOS]}.txt" "$INSTALLER_VOLUME_PATH${os_names[$userOS]}.txt"
+        curl "$REMOTE_INSTALLER_REPOSITORY${os_names[$userOS]}.txt" --output "$INSTALLER_VOLUME_PATH${os_names[$userOS]}.txt"
 
         echo "Unzipping new installer...."
         unzip -o "$UPDATE_ZIP_TEMP_DIR${remote_installers[$userOS]}" -d "$INSTALLER_VOLUME_PATH"
