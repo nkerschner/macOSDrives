@@ -24,7 +24,7 @@ readonly UPDATE_ZIP_TEMP_DIR="/Volumes/ASR/"
 # declare array of OS names
 declare -a os_names
     os_names[1]="Tahoe"
-	os_names[2]="Sequoia"
+    os_names[2]="Sequoia"
     os_names[3]="Sonoma"
     os_names[4]="Ventura"
     os_names[5]="Monterey"
@@ -32,7 +32,7 @@ declare -a os_names
 	
 # Create associative arrays for file paths
 declare -a asr_images
-	asr_images[1]="tahoe.dmg"
+    asr_images[1]="tahoe.dmg"
     asr_images[2]="sequoia.dmg"
     asr_images[3]="sonoma.dmg"
     asr_images[4]="ventura.dmg"
@@ -41,10 +41,10 @@ declare -a asr_images
     
 declare -a installers
     installers[1]="Install macOS Tahoe.app"
-	installers[2]="Install macOS Sequoia.app"
+    installers[2]="Install macOS Sequoia.app"
     installers[3]="Install macOS Sonoma.app"
     installers[4]="Install macOS Ventura.app"
-	installers[5]="Install macOS Monterey.app"
+    installers[5]="Install macOS Monterey.app"
     installers[6]="Install macOS Big Sur.app"
 
 declare -a remote_installers
@@ -52,7 +52,7 @@ declare -a remote_installers
 	remote_installers[2]="Install-macOS-Sequoia.zip"
     remote_installers[3]="Install-macOS-Sonoma.zip"
     remote_installers[4]="Install-macOS-Ventura.zip"
-	remote_installers[5]="Install-macOS-Monterey.zip"
+    remote_installers[5]="Install-macOS-Monterey.zip"
     remote_installers[6]="Install-macOS-Big-Sur.zip"
 
 # Get the internal disk
