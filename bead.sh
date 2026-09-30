@@ -11,8 +11,9 @@ copy_agent_from_usb() {
     if cp -R "/Volumes/BLANCCO/BEAD Agent" /Users/Shared/; then
         echo "Successfully copied BEAD Agent files"
     else
-    echo "Could not copy necessary files. Exiting..."
-        exit 1
+        echo "Could not copy files from USB, BEAD Agent must be fetched from BEAD Host."
+        get_bead_host
+        copy_agent_from_host
     fi
 }
 
